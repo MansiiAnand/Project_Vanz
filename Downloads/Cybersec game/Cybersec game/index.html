@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="CyberGrid - A futuristic cybersecurity training simulation inside a high-tech digital city network" />
+  <title>CyberGrid — Cybersecurity Training Simulation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <canvas id="game-canvas"></canvas>
+
+  <!-- Startup overlay -->
+  <div id="start-screen">
+    <div class="start-content">
+      <h1 class="glitch" data-text="CYBERGRID">CYBERGRID</h1>
+      <p class="subtitle">CYBERSECURITY TRAINING SIMULATION</p>
+      <div class="start-instructions">
+        <p>You are a cyber investigator deployed to secure the CyberGrid network.</p>
+        <p>Find vulnerabilities, stop attacks, and restore system security.</p>
+      </div>
+      <button id="start-btn">
+        <span class="btn-border"></span>
+        <span class="btn-text">INITIALIZE CONNECTION</span>
+      </button>
+      <div class="controls-hint">
+        <span>WASD</span> Move &nbsp;|&nbsp; <span>MOUSE</span> Look &nbsp;|&nbsp; <span>E</span> Interact
+      </div>
+    </div>
+  </div>
+
+  <!-- HUD -->
+  <div id="hud" class="hidden">
+    <div id="hud-top">
+      <div id="hud-mission">
+        <div class="hud-label">MISSION</div>
+        <div id="mission-text">Secure the CyberGrid network</div>
+      </div>
+      <div id="hud-progress">
+        <div class="hud-label">SYSTEMS SECURED</div>
+        <div id="progress-bar"><div id="progress-fill"></div></div>
+        <div id="progress-text">0 / 8</div>
+      </div>
+    </div>
+    <div id="hud-bottom">
+      <div id="interact-prompt" class="hidden">
+        <span class="key-hint">E</span> INTERACT
+      </div>
+    </div>
+    <div id="hud-alerts"></div>
+    <div id="minimap">
+      <canvas id="minimap-canvas" width="180" height="180"></canvas>
+    </div>
+  </div>
+
+  <!-- Challenge Modal -->
+  <div id="challenge-overlay" class="hidden">
+    <div id="challenge-panel">
+      <div id="challenge-header">
+        <div id="challenge-icon"></div>
+        <h2 id="challenge-title"></h2>
+        <div id="challenge-type-badge"></div>
+      </div>
+      <div id="challenge-description"></div>
+      <div id="challenge-content"></div>
+      <div id="challenge-feedback" class="hidden"></div>
+      <div id="challenge-actions">
+        <button id="challenge-submit" class="cyber-btn">EXECUTE</button>
+        <button id="challenge-close" class="cyber-btn secondary">ABORT</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Win Screen -->
+  <div id="win-screen" class="hidden">
+    <div class="win-content">
+      <h1 class="glitch" data-text="SECURED">SECURED</h1>
+      <p class="subtitle">ALL SYSTEMS RESTORED</p>
+      <p class="win-stats" id="win-stats"></p>
+      <button id="restart-btn" class="cyber-btn">REINITIALIZE</button>
+    </div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
