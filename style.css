@@ -1,0 +1,1209 @@
+/* ========================================
+   Rune Keeper - Ancient UI Theme
+   ======================================== */
+
+/* CSS Palette */
+:root {
+    --obsidian: #1a1a1a;
+    --sandstone: #d4af37;
+    --cyber-teal: #00f2ff;
+    --corrupted-red: #ff4d4d;
+    --parchment: #f5f0e1;
+    --shadow-dark: #0d0d0d;
+    --stone-gray: #4a4a4a;
+}
+
+/* Reset and Base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    background: var(--obsidian);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+/* Game Container - Fixed 1024x768 aspect ratio */
+#game-container {
+    width: 1024px;
+    height: 768px;
+    position: relative;
+    background: var(--obsidian);
+    border: 12px solid var(--sandstone);
+    border-radius: 8px;
+    box-shadow: 
+        0 0 30px rgba(0, 0, 0, 0.8),
+        inset 0 0 50px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+}
+
+/* Ancient Parchment Border Effect */
+#game-container::before {
+    content: '';
+    position: absolute;
+    top: -12px;
+    left: -12px;
+    right: -12px;
+    bottom: -12px;
+    border: 4px solid var(--stone-gray);
+    border-radius: 12px;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+/* Stone Texture Background */
+#game-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(212, 175, 55, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(0, 242, 255, 0.02) 0%, transparent 50%),
+        repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 2px,
+            rgba(74, 74, 74, 0.03) 2px,
+            rgba(74, 74, 74, 0.03) 4px
+        );
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Screen Management */
+.screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    z-index: 10;
+}
+
+.screen.active {
+    display: flex;
+}
+
+/* ========================================
+   Loading Screen
+   ======================================== */
+#loading-screen {
+    background: var(--obsidian);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+.loading-content {
+    text-align: center;
+    position: relative;
+    z-index: 2;
+}
+
+.mandala-container {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 30px;
+}
+
+.spinning-mandala {
+    width: 100%;
+    height: 100%;
+    animation: spinMandala 4s linear infinite;
+}
+
+@keyframes spinMandala {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.loading-title {
+    font-size: 48px;
+    color: var(--sandstone);
+    text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+    letter-spacing: 8px;
+    margin-bottom: 15px;
+    font-weight: normal;
+}
+
+.loading-subtitle {
+    font-size: 18px;
+    color: var(--cyber-teal);
+    opacity: 0.8;
+    letter-spacing: 3px;
+    margin-bottom: 40px;
+}
+
+.loading-bar {
+    width: 300px;
+    height: 6px;
+    background: var(--stone-gray);
+    border-radius: 3px;
+    overflow: hidden;
+    margin: 0 auto;
+    border: 1px solid var(--sandstone);
+}
+
+.loading-progress {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, var(--sandstone), var(--cyber-teal));
+    animation: loadProgress 2.5s ease-out forwards;
+}
+
+@keyframes loadProgress {
+    0% { width: 0%; }
+    100% { width: 100%; }
+}
+
+/* ========================================
+   Game Screen
+   ======================================== */
+#game-screen {
+    flex-direction: column;
+}
+
+#game-viewport {
+    flex: 1;
+    position: relative;
+    background: var(--shadow-dark);
+    overflow: hidden;
+}
+
+/* UI Overlay */
+#ui-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+    z-index: 50;
+}
+
+#level-indicator {
+    background: rgba(26, 26, 26, 0.9);
+    border: 2px solid var(--sandstone);
+    padding: 10px 20px;
+    border-radius: 4px;
+    color: var(--sandstone);
+    font-size: 16px;
+    letter-spacing: 2px;
+    pointer-events: auto;
+}
+
+#current-level {
+    color: var(--cyber-teal);
+    font-weight: bold;
+}
+
+#inventory-toggle {
+    background: rgba(26, 26, 26, 0.9);
+    border: 2px solid var(--cyber-teal);
+    padding: 10px 20px;
+    border-radius: 4px;
+    color: var(--parchment);
+    font-size: 14px;
+    letter-spacing: 1px;
+    opacity: 0.7;
+    pointer-events: auto;
+}
+
+/* ========================================
+   Level Styles
+   ======================================== */
+.level-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+/* Floor styling */
+.floor {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        linear-gradient(135deg, rgba(74, 74, 74, 0.3) 25%, transparent 25%),
+        linear-gradient(225deg, rgba(74, 74, 74, 0.3) 25%, transparent 25%),
+        linear-gradient(45deg, rgba(74, 74, 74, 0.3) 25%, transparent 25%),
+        linear-gradient(315deg, rgba(74, 74, 74, 0.3) 25%, transparent 25%);
+    background-size: 40px 40px;
+    background-position: 0 0, 20px 0, 20px -20px, 0px 20px;
+    background-color: var(--shadow-dark);
+}
+
+/* Walls */
+.wall {
+    position: absolute;
+    background: linear-gradient(180deg, var(--stone-gray) 0%, var(--obsidian) 100%);
+    border: 2px solid var(--sandstone);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.wall::before {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    height: 3px;
+    background: rgba(212, 175, 55, 0.3);
+    border-radius: 2px;
+}
+
+/* Ancient Objects */
+.ancient-object {
+    position: absolute;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.ancient-object:hover {
+    transform: scale(1.05);
+}
+
+/* Seal (Password concept) */
+.seal {
+    width: 60px;
+    height: 60px;
+    background: radial-gradient(circle, var(--obsidian) 30%, var(--sandstone) 100%);
+    border: 3px solid var(--cyber-teal);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 15px rgba(0, 242, 255, 0.3);
+}
+
+.seal::after {
+    content: 'ᚷ';
+    font-size: 24px;
+    color: var(--cyber-teal);
+}
+
+/* Forged Scroll (Phishing concept) */
+.forged-scroll {
+    width: 50px;
+    height: 70px;
+    background: linear-gradient(180deg, var(--parchment) 0%, #c9b896 100%);
+    border: 2px solid var(--corrupted-red);
+    border-radius: 4px;
+    position: relative;
+}
+
+.forged-scroll::before {
+    content: '✋';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 20px;
+    filter: hue-rotate(0deg) saturate(200%);
+}
+
+/* ========================================
+   Dialogue Screen
+   ======================================== */
+#dialogue-screen {
+    background: rgba(0, 0, 0, 0.85);
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 40px;
+    z-index: 200;
+}
+
+.dialogue-box {
+    display: flex;
+    background: var(--obsidian);
+    border: 3px solid var(--sandstone);
+    border-radius: 8px;
+    padding: 30px;
+    max-width: 800px;
+    margin: 0 auto;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+
+.dialogue-portrait {
+    width: 100px;
+    height: 100px;
+    background: var(--stone-gray);
+    border: 3px solid var(--cyber-teal);
+    border-radius: 50%;
+    margin-right: 30px;
+    flex-shrink: 0;
+}
+
+.dialogue-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+#dialogue-text {
+    color: var(--parchment);
+    font-size: 18px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+#dialogue-continue {
+    align-self: flex-end;
+    background: transparent;
+    border: 2px solid var(--cyber-teal);
+    color: var(--cyber-teal);
+    padding: 10px 30px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+#dialogue-continue:hover {
+    background: var(--cyber-teal);
+    color: var(--obsidian);
+}
+
+/* ========================================
+   Animations
+   ======================================== */
+@keyframes glowPulse {
+    0%, 100% { box-shadow: 0 0 10px rgba(0, 242, 255, 0.3); }
+    50% { box-shadow: 0 0 25px rgba(0, 242, 255, 0.6); }
+}
+
+.glow-pulse {
+    animation: glowPulse 2s ease-in-out infinite;
+}
+
+/* Ancient text styling */
+.ancient-text {
+    font-family: 'Georgia', serif;
+    color: var(--parchment);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.rune-text {
+    color: var(--cyber-teal);
+    font-weight: bold;
+}
+
+/* ========================================
+   Totem-Block Player Styles
+   ======================================== */
+
+/* Player bob/wobble animation when moving */
+@keyframes playerBob {
+    0%, 100% { transform: translateY(0) scaleY(1); }
+    25% { transform: translateY(-3px) scaleY(1.02); }
+    50% { transform: translateY(0) scaleY(1); }
+    75% { transform: translateY(-2px) scaleY(1.01); }
+}
+
+.totem-block.is-moving {
+    animation: playerBob 0.4s ease-in-out infinite;
+}
+
+/* Dash effects */
+@keyframes dashFade {
+    0% {
+        opacity: 0.6;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.9) translateY(-10px);
+    }
+}
+
+@keyframes dashPulse {
+    0%, 100% {
+        filter: drop-shadow(0 0 5px var(--cyber-teal));
+    }
+    50% {
+        filter: drop-shadow(0 0 15px var(--cyber-teal)) drop-shadow(0 0 25px var(--cyber-teal));
+    }
+}
+
+.totem-block.is-dashing svg {
+    animation: dashPulse 0.1s ease-in-out infinite;
+}
+
+/* Rune pulse animation */
+@keyframes runePulse {
+    0%, 100% {
+        filter: drop-shadow(0 0 3px var(--cyber-teal));
+        opacity: 0.8;
+    }
+    50% {
+        filter: drop-shadow(0 0 8px var(--cyber-teal)) drop-shadow(0 0 15px var(--cyber-teal));
+        opacity: 1;
+    }
+}
+
+#chest-rune {
+    animation: runePulse 2s ease-in-out infinite;
+}
+
+/* Interaction hint glow - Static glow, no bounce */
+#inventory-toggle.near-interactive {
+    background: rgba(0, 242, 255, 0.15) !important;
+    border-color: var(--cyber-teal) !important;
+    box-shadow: 0 0 15px rgba(0, 242, 255, 0.5), inset 0 0 10px rgba(0, 242, 255, 0.1) !important;
+    color: var(--cyber-teal) !important;
+    transform: none !important;
+}
+
+/* Dash cooldown indicator (visual only) */
+@keyframes cooldownPulse {
+    0% { opacity: 0.3; }
+    50% { opacity: 0.6; }
+    100% { opacity: 0.3; }
+}
+
+.totem-block.on-cooldown::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 3px;
+    background: var(--corrupted-red);
+    border-radius: 2px;
+    animation: cooldownPulse 1s ease-in-out infinite;
+}
+
+/* ========================================
+   NPC Styles
+   ======================================== */
+
+@keyframes interactionPulse {
+    0%, 100% {
+        opacity: 0;
+        transform: translateX(-50%) scale(0.8);
+    }
+    50% {
+        opacity: 1;
+        transform: translateX(-50%) scale(1.2);
+    }
+}
+
+.ancient-npc {
+    transition: transform 0.2s ease;
+}
+
+.ancient-npc:hover {
+    transform: scale(1.05);
+}
+
+.ancient-npc .interaction-indicator {
+    box-shadow: 0 0 15px var(--cyber-teal);
+}
+
+/* ========================================
+   Ancient Floor Tile Containers
+   ======================================== */
+
+.seal-container,
+.tablet-container,
+.scroll-container {
+    transition: all 0.3s ease;
+}
+
+.seal-container:hover,
+.tablet-container:hover,
+.scroll-container:hover {
+    transform: scale(1.02);
+    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.4), 0 0 15px rgba(212, 175, 55, 0.2);
+}
+
+.scroll-container:hover {
+    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.4), 0 0 15px rgba(255, 77, 77, 0.2);
+}
+
+/* ========================================
+   TOP HUD - Sun Dial, Zone Title, Score
+   ======================================== */
+#top-hud {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: linear-gradient(180deg, rgba(26, 26, 26, 0.95) 0%, rgba(26, 26, 26, 0.7) 100%);
+    border-bottom: 2px solid var(--sandstone);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    z-index: 100;
+    pointer-events: none;
+}
+
+/* Sun Dial Progress */
+#sun-dial {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+
+.sun-dial-segment {
+    width: 8px;
+    height: 30px;
+    background: var(--stone-gray);
+    border-radius: 2px;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+.sun-dial-segment.active {
+    background: var(--cyber-teal);
+    box-shadow: 0 0 15px var(--cyber-teal), inset 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+.sun-dial-segment.completed {
+    background: var(--sandstone);
+    box-shadow: 0 0 10px var(--sandstone);
+}
+
+/* Zone Title */
+#zone-title {
+    color: var(--sandstone);
+    font-size: 18px;
+    font-family: 'Georgia', serif;
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+    letter-spacing: 2px;
+}
+
+/* Security Score */
+#security-score {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.score-label {
+    color: var(--stone-gray);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.score-value {
+    color: var(--cyber-teal);
+    font-size: 24px;
+    font-weight: bold;
+    text-shadow: 0 0 15px var(--cyber-teal);
+}
+
+/* ========================================
+   CHRONICLE DRAWER (Inventory)
+   ======================================== */
+#chronicle-drawer {
+    position: absolute;
+    top: 60px;
+    right: 0;
+    width: 300px;
+    height: calc(100% - 60px);
+    background: rgba(26, 26, 26, 0.98);
+    border-left: 3px solid var(--sandstone);
+    z-index: 150;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    pointer-events: auto;
+}
+
+#chronicle-drawer:not(.hidden) {
+    transform: translateX(0);
+}
+
+#chronicle-drawer.hidden {
+    transform: translateX(100%);
+}
+
+.drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 2px solid var(--sandstone);
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.drawer-header h2 {
+    color: var(--sandstone);
+    font-size: 20px;
+    font-family: 'Georgia', serif;
+    margin: 0;
+}
+
+#close-chronicle {
+    background: transparent;
+    border: 2px solid var(--sandstone);
+    color: var(--sandstone);
+    width: 30px;
+    height: 30px;
+    font-size: 18px;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+.drawer-content {
+    padding: 20px;
+}
+
+.drawer-content h3 {
+    color: var(--stone-gray);
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid var(--stone-gray);
+    padding-bottom: 10px;
+}
+
+.artifact-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background: rgba(0, 242, 255, 0.05);
+    border: 1px solid var(--cyber-teal);
+    border-radius: 8px;
+    margin-bottom: 10px;
+    transition: all 0.3s ease;
+}
+
+.artifact-item:not(.hidden) {
+    animation: artifactPulse 2s ease-in-out infinite;
+}
+
+.artifact-item.hidden {
+    display: none;
+}
+
+@keyframes artifactPulse {
+    0%, 100% { box-shadow: 0 0 10px rgba(0, 242, 255, 0.2); }
+    50% { box-shadow: 0 0 20px rgba(0, 242, 255, 0.4); }
+}
+
+.artifact-icon {
+    font-size: 32px;
+}
+
+.artifact-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.artifact-name {
+    color: var(--cyber-teal);
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.artifact-desc {
+    color: var(--stone-gray);
+    font-size: 11px;
+    margin-top: 3px;
+}
+
+.drawer-footer {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+}
+
+.drawer-footer p {
+    color: var(--stone-gray);
+    font-size: 11px;
+    text-align: center;
+}
+
+/* Collected artifact styling */
+.artifact-item.collected {
+    border-color: var(--sandstone);
+    background: rgba(212, 175, 55, 0.1);
+}
+
+.artifact-item.collected .artifact-icon {
+    filter: drop-shadow(0 0 5px var(--sandstone));
+}
+
+/* Chronicle progress and rank */
+#chronicle-progress {
+    color: var(--cyber-teal);
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+#security-rank {
+    color: var(--sandstone);
+    font-size: 13px;
+    font-weight: bold;
+    font-style: italic;
+}
+
+/* Chronicle Button */
+#chronicle-btn {
+    background: rgba(0, 242, 255, 0.1);
+    border: 2px solid var(--cyber-teal);
+    padding: 8px 15px;
+    border-radius: 4px;
+    color: var(--cyber-teal);
+    font-size: 12px;
+    cursor: pointer;
+    pointer-events: auto;
+    transition: all 0.3s ease;
+}
+
+#chronicle-btn:hover {
+    background: rgba(0, 242, 255, 0.2);
+    box-shadow: 0 0 15px var(--cyber-teal);
+}
+
+/* ========================================
+   SETTINGS MENU
+   ======================================== */
+#settings-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 3000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#settings-menu.hidden {
+    display: none;
+}
+
+.settings-panel {
+    width: 400px;
+    background: var(--obsidian);
+    border: 3px solid var(--sandstone);
+    border-radius: 8px;
+    padding: 30px;
+    position: relative;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+}
+
+.settings-panel h2 {
+    color: var(--sandstone);
+    font-family: 'Georgia', serif;
+    font-size: 24px;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.settings-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: transparent;
+    border: 2px solid var(--sandstone);
+    color: var(--sandstone);
+    width: 35px;
+    height: 35px;
+    font-size: 20px;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+.setting-item {
+    margin-bottom: 25px;
+}
+
+.setting-item label {
+    display: block;
+    color: var(--stone-gray);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+}
+
+.toggle-group {
+    display: flex;
+    gap: 10px;
+}
+
+.toggle-btn {
+    flex: 1;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid var(--stone-gray);
+    color: var(--stone-gray);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Georgia', serif;
+}
+
+.toggle-btn.active {
+    background: rgba(0, 242, 255, 0.1);
+    border-color: var(--cyber-teal);
+    color: var(--cyber-teal);
+}
+
+.toggle-btn:hover {
+    border-color: var(--sandstone);
+    color: var(--sandstone);
+}
+
+.danger-btn {
+    width: 100%;
+    padding: 12px;
+    background: rgba(255, 77, 77, 0.1);
+    border: 2px solid var(--corrupted-red);
+    color: var(--corrupted-red);
+    cursor: pointer;
+    font-family: 'Georgia', serif;
+    transition: all 0.3s ease;
+}
+
+.danger-btn:hover {
+    background: rgba(255, 77, 77, 0.2);
+    box-shadow: 0 0 15px rgba(255, 77, 77, 0.3);
+}
+
+/* Controls Guide */
+.controls-guide {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 15px;
+    border-radius: 6px;
+}
+
+.control-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.control-row:last-child {
+    border-bottom: none;
+}
+
+.control-row kbd {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 14px;
+    color: var(--cyber-teal);
+    border: 1px solid var(--stone-gray);
+}
+
+.control-row span {
+    color: var(--parchment);
+    font-size: 14px;
+}
+
+/* ========================================
+   SCREEN EFFECTS - Shake & Particles
+   ======================================== */
+#screen-effects {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 2500;
+}
+
+.screen-shake {
+    animation: screenShake 0.5s ease-in-out;
+}
+
+@keyframes screenShake {
+    0%, 100% { transform: translate(0, 0); }
+    10% { transform: translate(-5px, 3px); }
+    20% { transform: translate(5px, -3px); }
+    30% { transform: translate(-5px, -3px); }
+    40% { transform: translate(5px, 3px); }
+    50% { transform: translate(-3px, 5px); }
+    60% { transform: translate(3px, -5px); }
+    70% { transform: translate(-3px, -5px); }
+    80% { transform: translate(3px, 5px); }
+    90% { transform: translate(-2px, 2px); }
+}
+
+/* Gold Dust Particles */
+.gold-dust {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: var(--sandstone);
+    border-radius: 50%;
+    pointer-events: none;
+    animation: goldDustFall 3s ease-out forwards;
+}
+
+@keyframes goldDustFall {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(500px) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+/* ========================================
+   SCANNING LINE EFFECT
+   ======================================== */
+.scan-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--cyber-teal), transparent);
+    opacity: 0.3;
+    animation: scanLine 4s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 50;
+}
+
+@keyframes scanLine {
+    0%, 100% { top: 0; opacity: 0; }
+    10% { opacity: 0.3; }
+    90% { opacity: 0.3; }
+    100% { top: 100%; opacity: 0; }
+}
+
+/* ========================================
+   UPDATED UI OVERLAY
+   ======================================== */
+#ui-overlay {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    pointer-events: none;
+    z-index: 100;
+}
+
+/* ========================================
+   NARRATIVE INTRO SCREEN
+   ======================================== */
+#intro-screen {
+    background: var(--obsidian);
+    z-index: 4000;
+}
+
+#intro-screen.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.intro-content {
+    text-align: center;
+    max-width: 600px;
+    padding: 40px;
+}
+
+.intro-rune {
+    font-size: 80px;
+    color: var(--cyber-teal);
+    text-shadow: 0 0 30px var(--cyber-teal);
+    margin-bottom: 20px;
+    animation: runePulse 3s ease-in-out infinite;
+}
+
+.intro-title {
+    font-size: 36px;
+    color: var(--sandstone);
+    font-family: 'Georgia', serif;
+    letter-spacing: 4px;
+    margin-bottom: 30px;
+    text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+}
+
+.intro-text {
+    font-size: 18px;
+    color: var(--parchment);
+    line-height: 1.8;
+    margin-bottom: 40px;
+    opacity: 0.9;
+}
+
+.intro-text .highlight {
+    color: var(--cyber-teal);
+    font-weight: bold;
+    text-shadow: 0 0 10px var(--cyber-teal);
+}
+
+.intro-start-btn {
+    background: transparent;
+    border: 3px solid var(--sandstone);
+    color: var(--sandstone);
+    padding: 15px 40px;
+    font-size: 18px;
+    font-family: 'Georgia', serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 2px;
+}
+
+.intro-start-btn:hover {
+    background: var(--sandstone);
+    color: var(--obsidian);
+    box-shadow: 0 0 30px var(--sandstone);
+}
+
+/* ========================================
+   FOOTSTEP PARTICLES
+   ======================================== */
+.footstep-particle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: rgba(212, 175, 55, 0.4);
+    border-radius: 50%;
+    pointer-events: none;
+    animation: footstepFade 0.8s ease-out forwards;
+}
+
+@keyframes footstepFade {
+    0% {
+        opacity: 0.6;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.3) translateY(-10px);
+    }
+}
+
+/* ========================================
+   LEVEL TRANSITION - DISSOLVE TO SAND
+   ======================================== */
+.level-transition {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--obsidian);
+    z-index: 5000;
+    pointer-events: none;
+}
+
+.dissolve-out {
+    animation: dissolveOut 1s ease-in forwards;
+}
+
+.dissolve-in {
+    animation: dissolveIn 1s ease-out forwards;
+}
+
+@keyframes dissolveOut {
+    0% {
+        opacity: 1;
+        filter: blur(0);
+    }
+    50% {
+        opacity: 0.5;
+        filter: blur(5px);
+    }
+    100% {
+        opacity: 0;
+        filter: blur(20px);
+    }
+}
+
+@keyframes dissolveIn {
+    0% {
+        opacity: 0;
+        filter: blur(20px);
+    }
+    50% {
+        opacity: 0.5;
+        filter: blur(5px);
+    }
+    100% {
+        opacity: 1;
+        filter: blur(0);
+    }
+}
+
+.sand-particle {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: var(--sandstone);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+/* ========================================
+   SUN-DIAL RUNE SEGMENTS (8 glowing runes)
+   ======================================== */
+#sun-dial {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.sun-dial-segment {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Georgia', serif;
+    font-size: 14px;
+    color: var(--stone-gray);
+    border: 2px solid var(--stone-gray);
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.sun-dial-segment::before {
+    content: attr(data-rune);
+}
+
+.sun-dial-segment.active {
+    color: var(--cyber-teal);
+    border-color: var(--cyber-teal);
+    box-shadow: 0 0 15px var(--cyber-teal), inset 0 0 10px rgba(0, 242, 255, 0.2);
+    text-shadow: 0 0 10px var(--cyber-teal);
+}
+
+.sun-dial-segment.completed {
+    color: var(--sandstone);
+    border-color: var(--sandstone);
+    box-shadow: 0 0 10px var(--sandstone);
+}

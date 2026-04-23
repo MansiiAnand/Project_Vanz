@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rune Keeper</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <!-- Loading Screen -->
+        <div id="loading-screen" class="screen active">
+            <div class="loading-content">
+                <div class="mandala-container">
+                    <svg class="spinning-mandala" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Outer ring -->
+                        <circle cx="100" cy="100" r="90" fill="none" stroke="var(--sandstone)" stroke-width="3"/>
+                        <circle cx="100" cy="100" r="80" fill="none" stroke="var(--cyber-teal)" stroke-width="2" stroke-dasharray="10,5"/>
+                        <!-- Inner geometric pattern -->
+                        <polygon points="100,20 120,80 180,100 120,120 100,180 80,120 20,100 80,80" 
+                                 fill="none" stroke="var(--sandstone)" stroke-width="2"/>
+                        <!-- Runes around center -->
+                        <text x="100" y="55" text-anchor="middle" fill="var(--cyber-teal)" font-size="14" font-family="serif">ᚠ</text>
+                        <text x="145" y="100" text-anchor="middle" fill="var(--cyber-teal)" font-size="14" font-family="serif">ᚢ</text>
+                        <text x="100" y="150" text-anchor="middle" fill="var(--cyber-teal)" font-size="14" font-family="serif">ᚦ</text>
+                        <text x="55" y="100" text-anchor="middle" fill="var(--cyber-teal)" font-size="14" font-family="serif">ᚨ</text>
+                        <!-- Center seal -->
+                        <circle cx="100" cy="100" r="25" fill="var(--obsidian)" stroke="var(--sandstone)" stroke-width="3"/>
+                        <text x="100" y="108" text-anchor="middle" fill="var(--cyber-teal)" font-size="20" font-family="serif">ᚱ</text>
+                    </svg>
+                </div>
+                <h1 class="loading-title">RUNE KEEPER</h1>
+                <p class="loading-subtitle">Awakening the Ancient Seals...</p>
+                <div class="loading-bar">
+                    <div class="loading-progress"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Narrative Intro Screen -->
+        <div id="intro-screen" class="screen">
+            <div class="intro-content">
+                <div class="intro-rune">ᚱ</div>
+                <h1 class="intro-title">THE KINGDOM'S CIPHERS</h1>
+                <p class="intro-text">
+                    The Kingdom's Ciphers have been breached.<br><br>
+                    You are the last <span class="highlight">Rune Keeper</span>.<br><br>
+                    Restore the seals...<br>
+                    or the shadows will rewrite our history.
+                </p>
+                <button class="intro-start-btn">Enter the Realm</button>
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="game-screen" class="screen">
+            <div id="game-viewport">
+                <!-- Level content will be injected here -->
+            </div>
+            <!-- Top HUD -->
+            <div id="top-hud">
+                <!-- Left: Sun-Dial Progress (8 rune segments) -->
+                <div id="sun-dial">
+                    <div class="sun-dial-segment active" data-level="1" data-rune="ᚠ"></div>
+                    <div class="sun-dial-segment" data-level="2" data-rune="ᚢ"></div>
+                    <div class="sun-dial-segment" data-level="3" data-rune="ᚦ"></div>
+                    <div class="sun-dial-segment" data-level="4" data-rune="ᚨ"></div>
+                    <div class="sun-dial-segment" data-level="5" data-rune="ᚱ"></div>
+                    <div class="sun-dial-segment" data-level="6" data-rune="ᚲ"></div>
+                    <div class="sun-dial-segment" data-level="7" data-rune="ᚹ"></div>
+                    <div class="sun-dial-segment" data-level="8" data-rune="ᛟ"></div>
+                </div>
+                
+                <!-- Center: Zone Title -->
+                <div id="zone-title">Zone 1: The Royal Vault</div>
+                
+                <!-- Right: Security Score -->
+                <div id="security-score">
+                    <span class="score-label">Security Score</span>
+                    <span class="score-value" id="score-display">0</span>
+                </div>
+            </div>
+
+            <!-- Bottom HUD -->
+            <div id="ui-overlay">
+                <div id="inventory-toggle">Press 'E' to Interact</div>
+                <div id="chronicle-btn">[C] Chronicle</div>
+            </div>
+
+            <!-- Chronicle Drawer (Side Panel) -->
+            <div id="chronicle-drawer" class="hidden">
+                <div class="drawer-header">
+                    <h2>📜 The Chronicle</h2>
+                    <button id="close-chronicle">×</button>
+                </div>
+                <div class="drawer-content">
+                    <h3>Collected Artifacts</h3>
+                    <div id="artifact-list">
+                        <div class="artifact-item hidden" id="artifact-royal_key" data-item-id="royal_key">
+                            <div class="artifact-icon">🗝</div>
+                            <div class="artifact-info">
+                                <span class="artifact-name">Royal Authorization Key</span>
+                                <span class="artifact-desc">Level 1: Password Security</span>
+                            </div>
+                        </div>
+                        <div class="artifact-item hidden" id="artifact-verified_decree" data-item-id="verified_decree">
+                            <div class="artifact-icon">📜</div>
+                            <div class="artifact-info">
+                                <span class="artifact-name">Verified Decree</span>
+                                <span class="artifact-desc">Level 2: Phishing Detection</span>
+                            </div>
+                        </div>
+                        <div class="artifact-item hidden" id="artifact-solar_crystal" data-item-id="solar_crystal">
+                            <div class="artifact-icon">☀</div>
+                            <div class="artifact-info">
+                                <span class="artifact-name">Solar Crystal</span>
+                                <span class="artifact-desc">Level 3: Encryption Mastery</span>
+                            </div>
+                        </div>
+                        <div class="artifact-item hidden" id="artifact-watchman_sigil" data-item-id="watchman_sigil">
+                            <div class="artifact-icon">👁</div>
+                            <div class="artifact-info">
+                                <span class="artifact-name">Watchman's Sigil</span>
+                                <span class="artifact-desc">Level 4: IDS Mastery</span>
+                            </div>
+                        </div>
+                        <div class="artifact-item hidden" id="artifact-caravan_compass" data-item-id="caravan_compass">
+                            <div class="artifact-icon">🧭</div>
+                            <div class="artifact-info">
+                                <span class="artifact-name">Caravan Compass</span>
+                                <span class="artifact-desc">Level 5: MITM Protection</span>
+                            </div>
+                        </div>
+                        <div class="artifact-item hidden" id="artifact-trade_ledger" data-item-id="trade_ledger">
+                            <div class="artifact-icon">📘</div>
+                            <div class="artifact-info">
+                                <span class="artifact-name">Trade Ledger</span>
+                                <span class="artifact-desc">Level 6: Social Engineering</span>
+                            </div>
+                        </div>
+                        <div class="artifact-item hidden" id="artifact-oracles_sight" data-item-id="oracles_sight">
+                            <div class="artifact-icon">👁</div>
+                            <div class="artifact-info">
+                                <span class="artifact-name">Oracle's Sight</span>
+                                <span class="artifact-desc">Level 7: MFA Mastery</span>
+                            </div>
+                        </div>
+                        <div class="artifact-item hidden" id="artifact-master_cipher" data-item-id="master_cipher">
+                            <div class="artifact-icon">🗝</div>
+                            <div class="artifact-info">
+                                <span class="artifact-name">Master Cipher</span>
+                                <span class="artifact-desc">Level 8: Incident Response</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="drawer-footer">
+                        <p id="chronicle-progress">Artifacts: 0/8</p>
+                        <p id="security-rank">Rank: Novice</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Menu (Esc) -->
+            <div id="settings-menu" class="hidden">
+                <div class="settings-panel">
+                    <h2>Game Settings</h2>
+                    <button id="close-settings" class="settings-close">×</button>
+                    
+                    <div class="setting-item">
+                        <label>Text Speed</label>
+                        <div class="toggle-group">
+                            <button id="text-instant" class="toggle-btn">Instant</button>
+                            <button id="text-typewriter" class="toggle-btn active">Typewriter</button>
+                        </div>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <label>Reset Progress</label>
+                        <button id="reset-progress" class="danger-btn">Clear All Data</button>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <label>Controls</label>
+                        <div class="controls-guide">
+                            <div class="control-row"><kbd>WASD</kbd> <span>Move</span></div>
+                            <div class="control-row"><kbd>E</kbd> <span>Interact</span></div>
+                            <div class="control-row"><kbd>C</kbd> <span>Chronicle</span></div>
+                            <div class="control-row"><kbd>Space</kbd> <span>Dash</span></div>
+                            <div class="control-row"><kbd>Esc</kbd> <span>Settings</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Screen Effects Container -->
+            <div id="screen-effects"></div>
+        </div>
+
+        <!-- Dialogue Screen -->
+        <div id="dialogue-screen" class="screen">
+            <div class="dialogue-box">
+                <div class="dialogue-portrait"></div>
+                <div class="dialogue-content">
+                    <p id="dialogue-text"></p>
+                    <button id="dialogue-continue">Continue</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Core Scripts - Order matters! -->
+    <script src="js/core/state.js"></script>
+    <script src="js/core/dialogue.js"></script>
+    <script src="js/core/puzzle.js"></script>
+    <script src="js/core/forgery.js"></script>
+    <script src="js/core/cipher.js"></script>
+    <script src="js/core/ids.js"></script>
+    <script src="js/core/bridge.js"></script>
+    <script src="js/core/engine.js"></script>
+    <script src="js/entities/player.js"></script>
+    <script src="js/entities/npc.js"></script>
+    <script src="js/levels/level1.js"></script>
+    <script src="js/levels/level2.js"></script>
+    <script src="js/levels/level3.js"></script>
+    <script src="js/levels/level4.js"></script>
+    <script src="js/levels/level5.js"></script>
+    <script src="js/levels/level6.js"></script>
+    <script src="js/levels/level7.js"></script>
+    <script src="js/levels/level8.js"></script>
+</body>
+</html>
